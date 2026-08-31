@@ -1,0 +1,35 @@
+% Gerado por src/analyze_correlations.py -- nao editar a mao.
+\begin{table}[htbp]
+  \centering
+  \caption{Correlação passo a passo entre as métricas de movimento do lote, por configuração (fonte de centroide $\times$ variante de Hausdorff): Spearman ($\rho$) e Pearson ($r$), com IC \SI{95}{\percent} por \emph{bootstrap} em blocos de $\approx$\SI{10}{\second}.}
+  \label{tab:corr-stats}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{llcc}
+    \toprule
+    Configuração & Par de métricas & $\rho$ (IC 95\%) & $r$ (IC 95\%) \\
+    \midrule
+    Caixa + clássico & $\II$ $\times$ \emph{optical flow} & 0,498 (0,457;\,0,536) & 0,108 (0,083;\,0,135) \\
+    Caixa + clássico & $\II$ $\times$ dist.\ percorrida & 0,798 (0,777;\,0,820) & 0,102 (0,077;\,0,128) \\
+    Caixa + clássico & \emph{optical flow} $\times$ dist.\ percorrida & 0,629 (0,594;\,0,664) & 0,744 (0,705;\,0,781) \\
+    \midrule
+    Caixa + p95 & $\II$ $\times$ \emph{optical flow} & 0,520 (0,481;\,0,558) & 0,116 (0,093;\,0,144) \\
+    Caixa + p95 & $\II$ $\times$ dist.\ percorrida & 0,822 (0,800;\,0,843) & 0,114 (0,091;\,0,139) \\
+    Caixa + p95 & \emph{optical flow} $\times$ dist.\ percorrida & 0,629 (0,594;\,0,665) & 0,744 (0,704;\,0,780) \\
+    \midrule
+    Máscara + clássico & $\II$ $\times$ \emph{optical flow} & 0,576 (0,545;\,0,607) & 0,180 (0,145;\,0,220) \\
+    Máscara + clássico & $\II$ $\times$ dist.\ percorrida & 0,892 (0,880;\,0,902) & 0,215 (0,175;\,0,258) \\
+    Máscara + clássico & \emph{optical flow} $\times$ dist.\ percorrida & 0,677 (0,650;\,0,708) & 0,793 (0,755;\,0,826) \\
+    \midrule
+    Máscara + p50 & $\II$ $\times$ \emph{optical flow} & 0,498 (0,460;\,0,536) & 0,683 (0,629;\,0,731) \\
+    Máscara + p50 & $\II$ $\times$ dist.\ percorrida & 0,620 (0,593;\,0,646) & 0,710 (0,651;\,0,759) \\
+    Máscara + p50 & \emph{optical flow} $\times$ dist.\ percorrida & 0,677 (0,648;\,0,707) & 0,793 (0,754;\,0,826) \\
+    \bottomrule
+  \end{tabular}}
+  \par\medskip\footnotesize Co-monotonicidade das séries do índice (Spearman contra Caixa + clássico): Caixa + p95 $\rho = \num{0,992}$; Máscara + clássico $\rho = \num{0,606}$; Máscara + p50 $\rho = \num{0,343}$.
+\end{table}
+
+% Co-monotonicidade Caixa + p95 vs Caixa + clássico: rho = 0,992, r = 0,967 (n = 23147).
+% Co-monotonicidade Máscara + clássico vs Caixa + clássico: rho = 0,606, r = 0,050 (n = 23147).
+% Co-monotonicidade Máscara + p50 vs Caixa + clássico: rho = 0,343, r = 0,077 (n = 23147).

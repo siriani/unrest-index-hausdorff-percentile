@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "video": "DVR-Ch1-CAM2-2026-06-18",
+    "duration_s": 1759.8394973333334,
+    "valid_steps": 23147,
+    "effective_rate_hz": 13.15290402055097,
+    "bootstrap_block_steps": 132,
+    "block_sec": 10.0,
+    "nboot": 2000,
+    "seed": 0,
+    "config_labels": {
+      "bbox_classic": "Caixa + clássico",
+      "bbox_p95": "Caixa + p95",
+      "mask_classic": "Máscara + clássico",
+      "mask_p50": "Máscara + p50"
+    }
+  },
+  "step_wise": {
+    "bbox_classic": {
+      "Unrest Index x optical flow": {
+        "n": 23147,
+        "pearson": 0.10841956553365766,
+        "spearman": 0.4980092567606623,
+        "pearson_ci": [
+          0.08322651893377075,
+          0.13508488375894376
+        ],
+        "spearman_ci": [
+          0.45683736986503204,
+          0.5358639522656452
+        ]
+      },
+      "Unrest Index x walking distance": {
+        "n": 23147,
+        "pearson": 0.10174151796091405,
+        "spearman": 0.798269714578144,
+        "pearson_ci": [
+          0.07698821011865337,
+          0.1275683157472936
+        ],
+        "spearman_ci": [
+          0.7765756973959053,
+          0.819837956997915
+        ]
+      },
+      "optical flow x walking distance": {
+        "n": 23147,
+        "pearson": 0.7442590004429712,
+        "spearman": 0.6292449155947528,
+        "pearson_ci": [
+          0.7045745273626026,
+          0.7813642938917416
+        ],
+        "spearman_ci": [
+          0.5940472193698166,
+          0.6638597337984431
+        ]
+      }
+    },
+    "bbox_p95": {
+      "Unrest Index x optical flow": {
+        "n": 23147,
+        "pearson": 0.11638689924084215,
+        "spearman": 0.5197551950786333,
+        "pearson_ci": [
+          0.09347530659733796,
+          0.1438583723979262
+        ],
+        "spearman_ci": [
+          0.4809958080114504,
+          0.5577799174475262
+        ]
+      },
+      "Unrest Index x walking distance": {
+        "n": 23147,
+        "pearson": 0.11398187179414956,
+        "spearman": 0.8219076984697299,
+        "pearson_ci": [
+          0.0910505515337318,
+          0.13868434469347002
+        ],
+        "spearman_ci": [
+          0.8000754862016354,
+          0.8431352596949756
+        ]
+      },
+      "optical flow x walking distance": {
+        "n": 23147,
+        "pearson": 0.7442590004429712,
+        "spearman": 0.6292449155947528,
+        "pearson_ci": [
+          0.7042348221427152,
+          0.779768813707177
+        ],
+        "spearman_ci": [
+          0.5942933211334244,
+          0.6654231247208137
+        ]
+      }
+    },
+    "mask_classic": {
+      "Unrest Index x optical flow": {
+        "n": 23147,
+        "pearson": 0.18007843367850768,
+        "spearman": 0.5760324011663457,
+        "pearson_ci": [
+          0.1446566865220405,
+          0.21986099129077882
+        ],
+        "spearman_ci": [
+          0.5451032301044515,
+          0.6074131329941265
+        ]
+      },
+      "Unrest Index x walking distance": {
+        "n": 23147,
+        "pearson": 0.21482822235412957,
+        "spearman": 0.8917593096268438,
+        "pearson_ci": [
+          0.17516792710447376,
+          0.25764798874032235
+        ],
+        "spearman_ci": [
+          0.879512667432431,
+          0.901766577201151
+        ]
+      },
+      "optical flow x walking distance": {
+        "n": 23147,
+        "pearson": 0.7933526356408693,
+        "spearman": 0.6774023830721493,
+        "pearson_ci": [
+          0.754985611746337,
+          0.8259994392996538
+        ],
+        "spearman_ci": [
+          0.6498413642850576,
+          0.7076742651305282
+        ]
+      }
+    },
+    "mask_p50": {
+      "Unrest Index x optical flow": {
+        "n": 23147,
+        "pearson": 0.6832282600929585,
+        "spearman": 0.49847803103709687,
+        "pearson_ci": [
+          0.6288529829448457,
+          0.7312543334376045
+        ],
+        "spearman_ci": [
+          0.45970106837539876,
+          0.5360618524511767
+        ]
+      },
+      "Unrest Index x walking distance": {
+        "n": 23147,
+        "pearson": 0.710411706472277,
+        "spearman": 0.6197600785497308,
+        "pearson_ci": [
+          0.6510930166777328,
+          0.7592502327422821
+        ],
+        "spearman_ci": [
+          0.5934876196217094,
+          0.6461836630866867
+        ]
+      },
+      "optical flow x walking distance": {
+        "n": 23147,
+        "pearson": 0.7933526356408693,
+        "spearman": 0.6774023830721493,
+        "pearson_ci": [
+          0.7542085515253527,
+          0.8260288502911898
+        ],
+        "spearman_ci": [
+          0.6479185665428706,
+          0.7066592732282395
+        ]
+      }
+    }
+  },
+  "autocorrelation": {
+    "index": {
+      "lag1": 0.43978297806555905,
+      "tau_int": 6.971619505655693,
+      "n_eff": 3320.1754601240223
+    },
+    "flock_walking_distance_step_px": {
+      "lag1": 0.7770210115501703,
+      "tau_int": 90.47691128662478,
+      "n_eff": 255.8442775159365
+    },
+    "optical_flow_mean": {
+      "lag1": 0.526882570580779,
+      "tau_int": 186.97994925366618,
+      "n_eff": 123.79402225956133
+    }
+  },
+  "co_monotonicity": {
+    "bbox_p95": {
+      "n": 23147,
+      "pearson": 0.9671040356463243,
+      "spearman": 0.9923230236576868
+    },
+    "mask_classic": {
+      "n": 23147,
+      "pearson": 0.050188926450770235,
+      "spearman": 0.6064397278915183
+    },
+    "mask_p50": {
+      "n": 23147,
+      "pearson": 0.07742477891894567,
+      "spearman": 0.3433971221667098
+    }
+  },
+  "mask_vs_bbox_delta_rho": {
+    "delta_rho": 0.0934895950486998,
+    "block_steps": 1184,
+    "ci": [
+      0.06023467223997169,
+      0.12086124725363623
+    ],
+    "block_sec": 90.0
+  }
+}

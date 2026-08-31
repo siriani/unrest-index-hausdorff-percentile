@@ -1,0 +1,37 @@
+% Gerado por src/analyze_replication.py -- nao editar a mao.
+\begin{table}[htbp]
+  \centering
+  \caption{Replicação em oito vídeos de aves adultas, quatro deles ($^{\dagger}$) sem nenhum quadro no pool de treino dos modelos. Correlação de postos de Spearman ($\rho$), passo a passo, do Unrest Index (Hausdorff clássica) com a distância percorrida, para as duas fontes de centroide. \emph{flow--walk}: $\rho$ entre as duas métricas de refer\^encia (indica quão consistente é o \emph{optical flow} naquele vídeo).}
+  \label{tab:replicacao}
+  \footnotesize\setlength{\tabcolsep}{5pt}
+  \begin{tabular}{llccc}
+    \toprule
+    Vídeo & fonte & \emph{flow--walk} $\rho$ & II $\times$ dist.\ $\rho$ & II $\times$ flow $\rho$ \\
+    \midrule
+    DVR-CAM2 (principal) & caixa & 0,63 & 0,80 & 0,50 \\
+     & máscara & 0,68 & 0,89 & 0,58 \\
+    \midrule
+    RecordPlan-04/23 & caixa & 0,67 & 0,60 & 0,46 \\
+     & máscara & 0,69 & 0,81 & 0,56 \\
+    \midrule
+    RecordPlan-02/24a & caixa & 0,32 & 0,82 & 0,25 \\
+     & máscara & 0,35 & 0,85 & 0,28 \\
+    \midrule
+    RecordPlan-02/24b & caixa & 0,57 & 0,72 & 0,41 \\
+     & máscara & 0,56 & 0,78 & 0,43 \\
+    \midrule
+    RecordPlan-04/09$^{\dagger}$ & caixa & 0,43 & 0,55 & 0,33 \\
+     & máscara & 0,47 & 0,77 & 0,36 \\
+    \midrule
+    SimPlay-CAM2$^{\dagger}$ & caixa & 0,44 & 0,76 & 0,34 \\
+     & máscara & 0,54 & 0,83 & 0,47 \\
+    \midrule
+    DVR-Ch2 (outra baia)$^{\dagger}$ & caixa & 0,64 & 0,63 & 0,48 \\
+     & máscara & 0,67 & 0,87 & 0,56 \\
+    \midrule
+    DVR-Ch3 (outra baia)$^{\dagger}$ & caixa & 0,71 & 0,70 & 0,50 \\
+     & máscara & 0,70 & 0,87 & 0,59 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+% $^{\dagger}$ sem nenhum quadro no pool de treino.
