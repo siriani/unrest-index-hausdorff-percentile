@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+"""
+analyze_percentile_sweep.py -- Spearman rho of the Unrest Index against the
+two reference metrics as a function of the partial-Hausdorff percentile k,
+for the main analysed video and both centroid sources.
+
+Reads:
+    <data-dir>/DVR-Ch1-CAM2-2026-06-18_sweep_bbox/unrest_timeseries.csv
+    <data-dir>/DVR-Ch1-CAM2-2026-06-18_sweep_mask_v3/unrest_timeseries.csv
+
+Each CSV holds one inference pass with every percentile column
+(unrest_classic, unrest_p30 ... unrest_p95). For each column this computes
+Spearman rho (with a moving-block-bootstrap 95% CI) against
+flock_walking_distance_step_px and against optical_flow_mean.
+
+Key finding: rho rises monotonically with k and plateaus from ~p80; at
+n ~= 10 birds/frame the p95 (the medical-imaging HD95 default) is
+indistinguishable from the max, and aggressive percentiles (p50-p70) cost
+ordering. The useful percentile scales as k*(n) ~= 100*(1 - 1/n).
+
+Outputs:
+    <out-dir>/percentile_sweep.json
+    <out-dir>/tables/tab_varredura_k.tex        (LaTeX fragment, pt-BR)
+    <out-dir>/figures/varredura_percentil.png
+
+Usage:
+    python3 src/analyze_percentile_sweep.py [--data-dir data/timeseries] [--out-dir results]
+                                            [--nboot 1000] [--block-sec 10] [--seed 0]
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+import gzip
+import json
+from pathlib import Path
+
+import numpy as np
+from scipy import stats
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+MAIN_VIDEO = "DVR-Ch1-CAM2-2026-06-18"
+SOURCES = [
+    ("bbox", f"{MAIN_VIDEO}_sweep_bbox",    "Centroide de caixa"),
+    ("mask", f"{MAIN_VIDEO}_sweep_mask_v3", "Centroide de máscara (seg v3)"),
+]
+# (column, k value; 100 = classic max)
+K_COLS = [("unrest_p30", 30), ("unrest_p40", 40), ("unrest_p50", 50), ("unrest_p60", 60),
+          ("unrest_p70", 70), ("unrest_p80", 80), ("unrest_p90", 90), ("unrest_p95", 95),
+          ("unrest_classic", 100)]
+WALK = "flock_walking_distance_step_px"
+FLOW = "optical_flow_mean"
+REFS = [(WALK, "walk", "dist. percorrida"), (FLOW, "flow", "optical flow")]
+
+
+def load_csv(path: Path) -> dict[str, np.ndarray]:
+    """Read a plain or gzip-compressed CSV of floats into column arrays."""
+    if not path.exists() and path.with_suffix(path.suffix + ".gz").exists():
+        path = path.with_suffix(path.suffix + ".gz")
+    opener = gzip.open if path.suffix == ".gz" else open
+    cols: dict[str, list] = {}
+    with opener(path, "rt", newline="") as fh:
+        for row in csv.DictReader(fh):
+            for k, v in row.items():
+                cols.setdefault(k, []).append(v)
+    out: dict[str, np.ndarray] = {}
+    for k, vals in cols.items():
+        try:
+            out[k] = np.array([np.nan if v in ("", "nan", "NaN") else float(v) for v in vals])
+        except ValueError:
+            out[k] = np.array(vals, dtype=object)
+    return out
+
+
+def rho_with_ci(a: np.ndarray, b: np.ndarray, *, block: int, nboot: int,
+                rng: np.random.Generator) -> dict:
+    m = np.isfinite(a) & np.isfinite(b)
+    a, b = a[m], b[m]
+    rho0 = float(stats.spearmanr(a, b)[0])
+    n = a.size
+    n_blocks = int(np.ceil(n / block))
+    boots = np.empty(nboot)
+    for i in range(nboot):
+        starts = rng.integers(0, n - block + 1, size=n_blocks)
+        idx = (starts[:, None] + np.arange(block)[None, :]).ravel()[:n]
+        boots[i] = stats.spearmanr(a[idx], b[idx])[0]
+    return {"spearman": rho0,
+            "ci": [float(np.percentile(boots, 2.5)), float(np.percentile(boots, 97.5))]}
+
+
+def fmt(x, d=2):
+    return "--" if x is None or not np.isfinite(x) else f"{x:.{d}f}".replace(".", ",")
+
+
+def emit_table(result: dict, out: Path) -> None:
+    L = [
+        "% Gerado por src/analyze_percentile_sweep.py -- nao editar a mao.",
+        "\\begin{table}[htbp]",
+        "  \\centering",
+        "  \\caption{Varredura do percentil $k$: correlação de postos de Spearman "
+        "($\\rho$) do Unrest Index com a distância percorrida por passo, passo a passo, "
+        "para as duas fontes de centroide. `máx' = distância de Hausdorff clássica.}",
+        "  \\label{tab:varredura-k}",
+        "  \\small\\setlength{\\tabcolsep}{4pt}",
+        "  \\resizebox{\\linewidth}{!}{%",
+        "  \\begin{tabular}{l" + "c" * len(K_COLS) + "}",
+        "    \\toprule",
+        "    & " + " & ".join(("máx" if k == 100 else str(k)) for _, k in K_COLS) + " \\\\",
+        "    \\midrule",
+    ]
+    for key, _, label in SOURCES:
+        row = result["sources"][key]["sweep"]
+        L.append(f"    {label} & " + " & ".join(
+            fmt(row[str(k)]["walk"]["spearman"]) for _, k in K_COLS) + " \\\\")
+    L += ["    \\bottomrule", "  \\end{tabular}%", "  }", "\\end{table}"]
+    out.write_text("\n".join(L) + "\n", "utf-8")
+
+
+def emit_figure(result: dict, out: Path) -> None:
+    fig, axes = plt.subplots(1, 2, figsize=(9.2, 3.9), sharey=True)
+    xs = [k for _, k in K_COLS]
+    xt = [("máx" if k == 100 else str(k)) for k in xs]
+    styles = {"walk": ("#1b6ca8", "-o", r"$\rho$  II$\times$dist. percorrida"),
+              "flow": ("#c1440e", "-^", r"$\rho$  II$\times$optical flow")}
+    for ax, (key, _, label) in zip(axes, SOURCES):
+        sweep = result["sources"][key]["sweep"]
+        for ref_key, (c, m, leg) in styles.items():
+            ax.plot(xs, [sweep[str(k)][ref_key]["spearman"] for k in xs],
+                    m, color=c, ms=4, lw=1.4, label=leg)
+        ax.set_title(label, fontsize=10)
+        ax.set_xlabel("percentil $k$ da Hausdorff parcial")
+        ax.set_xticks(xs); ax.set_xticklabels(xt, fontsize=8)
+        ax.set_ylim(-0.05, 1.0); ax.grid(alpha=0.3, lw=0.5)
+    axes[0].set_ylabel("correlação com métrica de referência")
+    axes[1].legend(fontsize=7.5, loc="lower left", framealpha=0.9)
+    fig.tight_layout()
+    fig.savefig(out, dpi=160)
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--data-dir", type=Path, default=Path("data/timeseries"))
+    ap.add_argument("--out-dir", type=Path, default=Path("results"))
+    ap.add_argument("--nboot", type=int, default=1000)
+    ap.add_argument("--block-sec", type=float, default=10.0)
+    ap.add_argument("--seed", type=int, default=0)
+    args = ap.parse_args()
+    rng = np.random.default_rng(args.seed)
+
+    result = {"meta": {"video": MAIN_VIDEO, "nboot": args.nboot,
+                       "block_sec": args.block_sec, "seed": args.seed}, "sources": {}}
+    for key, folder, label in SOURCES:
+        s = load_csv(args.data_dir / folder / "unrest_timeseries.csv")
+        t = s["timestamp_sec"][np.isfinite(s["timestamp_sec"])]
+        fs = np.isfinite(s["unrest_classic"]).sum() / (t[-1] - t[0])
+        block = max(4, int(round(args.block_sec * fs)))
+        sweep = {}
+        for col, kval in K_COLS:
+            sweep[str(kval)] = {
+                rk: rho_with_ci(s[col], s[rc], block=block, nboot=args.nboot, rng=rng)
+                for rc, rk, _ in REFS
+            }
+        result["sources"][key] = {"label": label, "fs_hz": float(fs),
+                                  "block_steps": block, "sweep": sweep}
+        print(f"[{label}] fs={fs:.2f} Hz  block={block}")
+        for _, kval in K_COLS:
+            r = result["sources"][key]["sweep"][str(kval)]
+            kk = "classic" if kval == 100 else f"p{kval}"
+            print(f"  {kk:>8s}  walk rho={r['walk']['spearman']:+.3f}  "
+                  f"flow rho={r['flow']['spearman']:+.3f}")
+        print()
+
+    args.out_dir.joinpath("tables").mkdir(parents=True, exist_ok=True)
+    args.out_dir.joinpath("figures").mkdir(parents=True, exist_ok=True)
+    (args.out_dir / "percentile_sweep.json").write_text(
+        json.dumps(result, indent=2, ensure_ascii=False), "utf-8")
+    emit_table(result, args.out_dir / "tables" / "tab_varredura_k.tex")
+    emit_figure(result, args.out_dir / "figures" / "varredura_percentil.png")
+    print(f"wrote: {args.out_dir/'percentile_sweep.json'}\n"
+          f"       {args.out_dir/'tables'/'tab_varredura_k.tex'}\n"
+          f"       {args.out_dir/'figures'/'varredura_percentil.png'}")
+
+
+if __name__ == "__main__":
+    main()
