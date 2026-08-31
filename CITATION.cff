@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the accompanying article."
+title: "Calibrating the Unrest Index for adult broiler video: the Hausdorff-distance percentile depends on the number of birds per frame"
+abstract: >-
+  Code and derived time series for a step-wise, rank-based re-analysis of the
+  Unrest Index (Del Valle et al., 2021) on top-view adult-broiler video. Two
+  modifications are evaluated: an instance-segmentation mask area centroid and
+  the partial (percentile) Hausdorff distance. The central finding is the
+  coupling between the useful percentile k and the number of birds per frame n,
+  k*(n) ~= 100*(1 - 1/n): at n ~= 10 the medical-imaging HD95 is
+  indistinguishable from the max and aggressive percentiles cost ordering.
+authors:
+  - family-names: Siriani
+    given-names: Allan Lincoln Rodrigues
+    affiliation: "Sao Paulo State University (UNESP), Tupa, SP, Brazil"
+  - family-names: Moura
+    given-names: Daniella Jorge de
+    affiliation: "University of Campinas (UNICAMP), FEAGRI, Campinas, SP, Brazil"
+keywords:
+  - poultry welfare
+  - precision livestock farming
+  - computer vision
+  - Hausdorff distance
+  - Unrest Index
+  - YOLO
+  - optical flow
+license: MIT

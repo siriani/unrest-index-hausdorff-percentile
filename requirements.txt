@@ -1,0 +1,10 @@
+# Analysis scripts (src/analyze_*.py)
+numpy==1.26.4
+scipy==1.17.0
+matplotlib>=3.8
+
+# Only needed to recompute the time series from video (src/compute_unrest_index.py)
+opencv-python==4.11.0
+ultralytics==8.4.51
+# torch: install the build matching your CUDA, e.g.
+#   pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
