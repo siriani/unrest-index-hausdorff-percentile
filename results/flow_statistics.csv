@@ -1,0 +1,129 @@
+video,centroid,series,flow_stat,n_steps,spearman_rho
+DVR-Ch1-CAM2-2026-06-18,mask_v3,Unrest Index (classic),mean,23147,0.576
+DVR-Ch1-CAM2-2026-06-18,mask_v3,Unrest Index (classic),var,23147,0.626
+DVR-Ch1-CAM2-2026-06-18,mask_v3,Unrest Index (classic),skew,23147,0.374
+DVR-Ch1-CAM2-2026-06-18,mask_v3,Unrest Index (classic),kurt,23147,0.349
+DVR-Ch1-CAM2-2026-06-18,mask_v3,Travel distance,mean,23147,0.677
+DVR-Ch1-CAM2-2026-06-18,mask_v3,Travel distance,var,23147,0.68
+DVR-Ch1-CAM2-2026-06-18,mask_v3,Travel distance,skew,23147,0.328
+DVR-Ch1-CAM2-2026-06-18,mask_v3,Travel distance,kurt,23147,0.306
+DVR-Ch1-CAM2-2026-06-18,bbox,Unrest Index (classic),mean,23147,0.498
+DVR-Ch1-CAM2-2026-06-18,bbox,Unrest Index (classic),var,23147,0.541
+DVR-Ch1-CAM2-2026-06-18,bbox,Unrest Index (classic),skew,23147,0.338
+DVR-Ch1-CAM2-2026-06-18,bbox,Unrest Index (classic),kurt,23147,0.321
+DVR-Ch1-CAM2-2026-06-18,bbox,Travel distance,mean,23147,0.629
+DVR-Ch1-CAM2-2026-06-18,bbox,Travel distance,var,23147,0.641
+DVR-Ch1-CAM2-2026-06-18,bbox,Travel distance,skew,23147,0.346
+DVR-Ch1-CAM2-2026-06-18,bbox,Travel distance,kurt,23147,0.331
+DVR-Ch2-CAM1-2026-06-18,mask_v3,Unrest Index (classic),mean,35729,0.563
+DVR-Ch2-CAM1-2026-06-18,mask_v3,Unrest Index (classic),var,35729,0.595
+DVR-Ch2-CAM1-2026-06-18,mask_v3,Unrest Index (classic),skew,35729,0.349
+DVR-Ch2-CAM1-2026-06-18,mask_v3,Unrest Index (classic),kurt,35729,0.32
+DVR-Ch2-CAM1-2026-06-18,mask_v3,Travel distance,mean,35729,0.669
+DVR-Ch2-CAM1-2026-06-18,mask_v3,Travel distance,var,35729,0.66
+DVR-Ch2-CAM1-2026-06-18,mask_v3,Travel distance,skew,35729,0.313
+DVR-Ch2-CAM1-2026-06-18,mask_v3,Travel distance,kurt,35729,0.287
+DVR-Ch2-CAM1-2026-06-18,bbox,Unrest Index (classic),mean,35729,0.481
+DVR-Ch2-CAM1-2026-06-18,bbox,Unrest Index (classic),var,35729,0.512
+DVR-Ch2-CAM1-2026-06-18,bbox,Unrest Index (classic),skew,35729,0.313
+DVR-Ch2-CAM1-2026-06-18,bbox,Unrest Index (classic),kurt,35729,0.289
+DVR-Ch2-CAM1-2026-06-18,bbox,Travel distance,mean,35729,0.645
+DVR-Ch2-CAM1-2026-06-18,bbox,Travel distance,var,35729,0.656
+DVR-Ch2-CAM1-2026-06-18,bbox,Travel distance,skew,35729,0.376
+DVR-Ch2-CAM1-2026-06-18,bbox,Travel distance,kurt,35729,0.355
+DVR-Ch3-CAM3-2026-06-18,mask_v3,Unrest Index (classic),mean,35246,0.587
+DVR-Ch3-CAM3-2026-06-18,mask_v3,Unrest Index (classic),var,35246,0.598
+DVR-Ch3-CAM3-2026-06-18,mask_v3,Unrest Index (classic),skew,35246,0.255
+DVR-Ch3-CAM3-2026-06-18,mask_v3,Unrest Index (classic),kurt,35246,0.216
+DVR-Ch3-CAM3-2026-06-18,mask_v3,Travel distance,mean,35246,0.701
+DVR-Ch3-CAM3-2026-06-18,mask_v3,Travel distance,var,35246,0.668
+DVR-Ch3-CAM3-2026-06-18,mask_v3,Travel distance,skew,35246,0.216
+DVR-Ch3-CAM3-2026-06-18,mask_v3,Travel distance,kurt,35246,0.184
+DVR-Ch3-CAM3-2026-06-18,bbox,Unrest Index (classic),mean,35246,0.502
+DVR-Ch3-CAM3-2026-06-18,bbox,Unrest Index (classic),var,35246,0.52
+DVR-Ch3-CAM3-2026-06-18,bbox,Unrest Index (classic),skew,35246,0.26
+DVR-Ch3-CAM3-2026-06-18,bbox,Unrest Index (classic),kurt,35246,0.235
+DVR-Ch3-CAM3-2026-06-18,bbox,Travel distance,mean,35246,0.712
+DVR-Ch3-CAM3-2026-06-18,bbox,Travel distance,var,35246,0.698
+DVR-Ch3-CAM3-2026-06-18,bbox,Travel distance,skew,35246,0.27
+DVR-Ch3-CAM3-2026-06-18,bbox,Travel distance,kurt,35246,0.236
+RecordPlan_20260224100150_1007_2,mask_v3,Unrest Index (classic),mean,36032,0.284
+RecordPlan_20260224100150_1007_2,mask_v3,Unrest Index (classic),var,36032,0.24
+RecordPlan_20260224100150_1007_2,mask_v3,Unrest Index (classic),skew,36032,0.071
+RecordPlan_20260224100150_1007_2,mask_v3,Unrest Index (classic),kurt,36032,0.091
+RecordPlan_20260224100150_1007_2,mask_v3,Travel distance,mean,36032,0.348
+RecordPlan_20260224100150_1007_2,mask_v3,Travel distance,var,36032,0.275
+RecordPlan_20260224100150_1007_2,mask_v3,Travel distance,skew,36032,0.055
+RecordPlan_20260224100150_1007_2,mask_v3,Travel distance,kurt,36032,0.079
+RecordPlan_20260224100150_1007_2,bbox,Unrest Index (classic),mean,36032,0.253
+RecordPlan_20260224100150_1007_2,bbox,Unrest Index (classic),var,36032,0.212
+RecordPlan_20260224100150_1007_2,bbox,Unrest Index (classic),skew,36032,0.071
+RecordPlan_20260224100150_1007_2,bbox,Unrest Index (classic),kurt,36032,0.094
+RecordPlan_20260224100150_1007_2,bbox,Travel distance,mean,36032,0.323
+RecordPlan_20260224100150_1007_2,bbox,Travel distance,var,36032,0.257
+RecordPlan_20260224100150_1007_2,bbox,Travel distance,skew,36032,0.064
+RecordPlan_20260224100150_1007_2,bbox,Travel distance,kurt,36032,0.09
+RecordPlan_20260224140202_1007_3,mask_v3,Unrest Index (classic),mean,36040,0.434
+RecordPlan_20260224140202_1007_3,mask_v3,Unrest Index (classic),var,36040,0.397
+RecordPlan_20260224140202_1007_3,mask_v3,Unrest Index (classic),skew,36040,0.138
+RecordPlan_20260224140202_1007_3,mask_v3,Unrest Index (classic),kurt,36040,0.139
+RecordPlan_20260224140202_1007_3,mask_v3,Travel distance,mean,36040,0.557
+RecordPlan_20260224140202_1007_3,mask_v3,Travel distance,var,36040,0.477
+RecordPlan_20260224140202_1007_3,mask_v3,Travel distance,skew,36040,0.124
+RecordPlan_20260224140202_1007_3,mask_v3,Travel distance,kurt,36040,0.126
+RecordPlan_20260224140202_1007_3,bbox,Unrest Index (classic),mean,36040,0.405
+RecordPlan_20260224140202_1007_3,bbox,Unrest Index (classic),var,36040,0.373
+RecordPlan_20260224140202_1007_3,bbox,Unrest Index (classic),skew,36040,0.13
+RecordPlan_20260224140202_1007_3,bbox,Unrest Index (classic),kurt,36040,0.131
+RecordPlan_20260224140202_1007_3,bbox,Travel distance,mean,36040,0.574
+RecordPlan_20260224140202_1007_3,bbox,Travel distance,var,36040,0.505
+RecordPlan_20260224140202_1007_3,bbox,Travel distance,skew,36040,0.133
+RecordPlan_20260224140202_1007_3,bbox,Travel distance,kurt,36040,0.133
+RecordPlan_20260409084432_1007_3,mask_v3,Unrest Index (classic),mean,36021,0.364
+RecordPlan_20260409084432_1007_3,mask_v3,Unrest Index (classic),var,36021,0.45
+RecordPlan_20260409084432_1007_3,mask_v3,Unrest Index (classic),skew,36021,0.368
+RecordPlan_20260409084432_1007_3,mask_v3,Unrest Index (classic),kurt,36021,0.365
+RecordPlan_20260409084432_1007_3,mask_v3,Travel distance,mean,36021,0.466
+RecordPlan_20260409084432_1007_3,mask_v3,Travel distance,var,36021,0.524
+RecordPlan_20260409084432_1007_3,mask_v3,Travel distance,skew,36021,0.411
+RecordPlan_20260409084432_1007_3,mask_v3,Travel distance,kurt,36021,0.416
+RecordPlan_20260409084432_1007_3,bbox,Unrest Index (classic),mean,36021,0.327
+RecordPlan_20260409084432_1007_3,bbox,Unrest Index (classic),var,36021,0.406
+RecordPlan_20260409084432_1007_3,bbox,Unrest Index (classic),skew,36021,0.343
+RecordPlan_20260409084432_1007_3,bbox,Unrest Index (classic),kurt,36021,0.343
+RecordPlan_20260409084432_1007_3,bbox,Travel distance,mean,36021,0.429
+RecordPlan_20260409084432_1007_3,bbox,Travel distance,var,36021,0.531
+RecordPlan_20260409084432_1007_3,bbox,Travel distance,skew,36021,0.494
+RecordPlan_20260409084432_1007_3,bbox,Travel distance,kurt,36021,0.497
+RecordPlan_20260423103037_1001_4,mask_v3,Unrest Index (classic),mean,36044,0.563
+RecordPlan_20260423103037_1001_4,mask_v3,Unrest Index (classic),var,36044,0.586
+RecordPlan_20260423103037_1001_4,mask_v3,Unrest Index (classic),skew,36044,0.269
+RecordPlan_20260423103037_1001_4,mask_v3,Unrest Index (classic),kurt,36044,0.248
+RecordPlan_20260423103037_1001_4,mask_v3,Travel distance,mean,36044,0.688
+RecordPlan_20260423103037_1001_4,mask_v3,Travel distance,var,36044,0.668
+RecordPlan_20260423103037_1001_4,mask_v3,Travel distance,skew,36044,0.243
+RecordPlan_20260423103037_1001_4,mask_v3,Travel distance,kurt,36044,0.231
+RecordPlan_20260423103037_1001_4,bbox,Unrest Index (classic),mean,36044,0.459
+RecordPlan_20260423103037_1001_4,bbox,Unrest Index (classic),var,36044,0.467
+RecordPlan_20260423103037_1001_4,bbox,Unrest Index (classic),skew,36044,0.198
+RecordPlan_20260423103037_1001_4,bbox,Unrest Index (classic),kurt,36044,0.191
+RecordPlan_20260423103037_1001_4,bbox,Travel distance,mean,36044,0.667
+RecordPlan_20260423103037_1001_4,bbox,Travel distance,var,36044,0.655
+RecordPlan_20260423103037_1001_4,bbox,Travel distance,skew,36044,0.251
+RecordPlan_20260423103037_1001_4,bbox,Travel distance,kurt,36044,0.245
+SimPlay-LCT2-CAM2-2026-03-16,mask_v3,Unrest Index (classic),mean,35997,0.469
+SimPlay-LCT2-CAM2-2026-03-16,mask_v3,Unrest Index (classic),var,35997,0.436
+SimPlay-LCT2-CAM2-2026-03-16,mask_v3,Unrest Index (classic),skew,35997,0.055
+SimPlay-LCT2-CAM2-2026-03-16,mask_v3,Unrest Index (classic),kurt,35997,0.08
+SimPlay-LCT2-CAM2-2026-03-16,mask_v3,Travel distance,mean,35997,0.538
+SimPlay-LCT2-CAM2-2026-03-16,mask_v3,Travel distance,var,35997,0.476
+SimPlay-LCT2-CAM2-2026-03-16,mask_v3,Travel distance,skew,35997,0.042
+SimPlay-LCT2-CAM2-2026-03-16,mask_v3,Travel distance,kurt,35997,0.072
+SimPlay-LCT2-CAM2-2026-03-16,bbox,Unrest Index (classic),mean,35997,0.344
+SimPlay-LCT2-CAM2-2026-03-16,bbox,Unrest Index (classic),var,35997,0.309
+SimPlay-LCT2-CAM2-2026-03-16,bbox,Unrest Index (classic),skew,35997,0.026
+SimPlay-LCT2-CAM2-2026-03-16,bbox,Unrest Index (classic),kurt,35997,0.052
+SimPlay-LCT2-CAM2-2026-03-16,bbox,Travel distance,mean,35997,0.442
+SimPlay-LCT2-CAM2-2026-03-16,bbox,Travel distance,var,35997,0.382
+SimPlay-LCT2-CAM2-2026-03-16,bbox,Travel distance,skew,35997,0.033
+SimPlay-LCT2-CAM2-2026-03-16,bbox,Travel distance,kurt,35997,0.069

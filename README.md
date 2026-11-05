@@ -1,137 +1,199 @@
-# Calibrating the Unrest Index for adult broiler video
+# Unrest Index, tracker-derived travel distance and optical flow in broiler video
 
-**The Hausdorff-distance percentile depends on the number of birds per frame.**
+Analysis code and derived time series for the article
 
-Code and derived time series for a step-wise, **rank-based** re-analysis of the
-Unrest Index (Del Valle et al., 2021) on top-view video of adult broiler
-chickens. This repository accompanies a manuscript in preparation (in
-Portuguese; target journal *Computers and Electronics in Agriculture*,
-Elsevier). Raw video and model weights are **not** here — see
-[Data](#data-not-in-git).
+> Hübner, I. C.; Siriani, A. L. R.; Hokumura Filho, C. N.; Mollo Neto, M.;
+> Moura, D. J. de; Barros, J. de S. G. **Comparison of the Unrest Index with
+> Tracker-Derived Travel Distance and Optical Flow in Broiler Videos.**
+> *Animals* (MDPI), manuscript animals-4688242, under review (revised version).
 
-## What the study does
+| | |
+|---|---|
+| Code | this repository (MIT licence) |
+| Data (videos, annotations, per-instance outputs) | Zenodo, DOI [10.5281/zenodo.23960761](https://doi.org/10.5281/zenodo.23960761) (CC BY 4.0; the DOI resolves once the record is published) |
+| Release for the revised manuscript | tag `v2.0-revision` |
+| Release for the submitted manuscript | tag `v1.0-submission` (commit `d36de64`) |
 
-The Unrest Index is the Hausdorff distance between the sets of per-frame bird
-centroids in consecutive sampled frames. We re-implement it and evaluate two
-modifications, judging each only by how well it **orders** the flock's activity
-over time (Spearman rho against an independent walking-distance signal from
-ByteTrack, and against Farneback dense optical flow):
+## Overview
 
-1. **Mask-area centroid.** Replacing the bounding-box centre with the pixel-area
-   centroid of a YOLO26 instance mask (`cv2.moments`) raises rho(index, walking
-   distance) from ~0.80 to ~0.89 and cuts identity fragmentation.
-2. **Partial (percentile) Hausdorff distance.** Replacing the max with the k-th
-   percentile of nearest-neighbour distances — the HD95 idea from medical image
-   segmentation. At ~10 birds per frame it does **not** help ordering: p95 is
-   indistinguishable from the max, and aggressive percentiles (p50–p70) *lose*
-   ordering fidelity.
+The Unrest Index (Del Valle et al., 2021) summarises flock activity as the
+Hausdorff distance between the sets of bird positions detected in two
+consecutive sampled frames. This repository computes the index from overhead
+video of small broiler groups and compares it, step by step, with two other
+activity measures:
 
-The central result is the coupling between the useful percentile *k* and the
-number of birds per frame *n*: **k\*(n) ≈ 100·(1 − 1/n)**. The percentile
-window only opens up for larger flocks. The rho ≈ 0.8–0.9 agreement with
-walking distance replicates step-by-step across 8 videos, including 4 with
-**zero** frames in the YOLO training pool.
+* **tracker-derived travel distance**: the sum, over track identifiers present
+  in two consecutive steps, of each bird's displacement (ByteTrack;
+  Zhang et al., 2022);
+* **dense optical flow**: Farnebäck (2003) flow magnitude, the only comparator
+  that does not depend on the detections.
+
+Agreement is measured by Spearman's rank correlation, with confidence intervals
+from a moving-block bootstrap (Künsch, 1989).
+
+Two variants of the index are examined:
+
+1. **Position read-out.** The centre of the detection box versus the area
+   centroid of the instance mask. In the revised analysis the two read-outs are
+   taken from the *same* instances, frames and track identifiers of a single
+   segmentation-model pass, which isolates the effect of the read-out from that
+   of the model (`src/dump_paired_instances.py`, `src/analyze_paired_centroids.py`).
+2. **Partial Hausdorff distance.** The *k*-th percentile of nearest-neighbour
+   distances instead of the maximum (Huttenlocher et al., 1993).
+
+### Results of the revised analysis (eight recordings)
+
+The numbers below are taken from `results/paired_centroids.md`.
+
+* With instances held fixed, the choice between the mask centroid and the box
+  centre showed **no consistent direction** in agreement with optical flow.
+  Across recordings Δρ ranged from −0.048 to +0.051 (mean 0.000).
+* The improvement reported in the submitted manuscript is reproduced when only
+  the **model run** changes: segmentation model versus detection model, both
+  read at the tracker box centre, gave Δρ vs optical flow of +0.042 to +0.120,
+  with the interval above zero in 8/8 recordings. It disappears when only the
+  read-out changes.
+* Index–distance agreement is partly **circular**. Replacing the travel distance
+  computed from the same coordinates with one computed from a different
+  read-out lowers ρ by about 0.19 (range 0.15–0.23). Detections and identifiers
+  remain shared, so this is a lower bound.
+* The p95 partial Hausdorff distance gave a **small but consistent** increase over
+  the maximum: Δρ +0.02 to +0.04, with the interval above zero in all eight
+  recordings.
+
+Point estimates and conclusions are unchanged with bootstrap blocks of 10 s, 300 s
+and 600 s (`results/long_blocks/`). All intervals describe uncertainty *within*
+each recording. The eight
+recordings include same-day and same-flock sets (see `videos_metadata.csv` on
+Zenodo) and are not a sample of independent flocks.
 
 ## Repository layout
 
 ```
 .
 ├── src/
-│   ├── compute_unrest_index.py   # video -> per-frame CSV (Unrest Index, walking distance, optical flow)
-│   ├── analyze_correlations.py    # 4 configs on the main video -> Table 5 (tab_correlacoes.tex)
-│   ├── analyze_percentile_sweep.py# percentile sweep + batch size -> Table 6 + Fig 4
-│   └── analyze_replication.py     # 8-video replication -> Table 7 + Fig 5
+│   ├── compute_unrest_index.py      # video -> per-step series (index, travel distance, optical flow)
+│   ├── dump_paired_instances.py     # video -> per-instance table (raw box, tracker box, mask centroid) [revision]
+│   ├── analyze_paired_centroids.py  # controlled centroid / model / circularity contrasts [revision]
+│   ├── analyze_flow_statistics.py   # agreement with the four optical-flow moments [revision]
+│   ├── analyze_correlations.py      # principal recording, four configurations [submission]
+│   ├── analyze_percentile_sweep.py  # percentile sweep [submission]
+│   └── analyze_replication.py       # eight-recording replication [submission]
 ├── data/
-│   ├── MANIFEST.csv               # the 16 runs: video, centroid source, resolution, stride, steps, training frames
-│   └── timeseries/<run>/          # one folder per (video x centroid source); see data/timeseries/README.md
-│       ├── unrest_timeseries.csv.gz
-│       ├── run_config.json
-│       ├── walking_distance_per_id.csv
-│       └── walking_distance_summary.json
+│   ├── MANIFEST.csv                 # the 16 per-step runs (video x model/read-out)
+│   ├── timeseries/<run>/            # per-step series, committed (see data/timeseries/README.md)
+│   └── paired/README.md             # where to place the per-instance outputs from Zenodo
 ├── results/
-│   ├── correlations.json  percentile_sweep.json  replication.json
-│   ├── tables/*.tex               # LaTeX fragments consumed by the manuscript (pt-BR strings on purpose)
-│   └── figures/*.png
-├── docs/REPRODUCIBILITY.md        # environment, training/annotation/inference hyperparameters
+│   ├── paired_centroids.{json,md}   # revision: paired bootstrap, blocks of 90 s and 10 s
+│   ├── long_blocks/paired_centroids.{json,md}  # revision: blocks of 300 s and 600 s
+│   ├── flow_statistics.{csv,md}     # revision: four optical-flow statistics
+│   ├── *.json, tables/, figures/    # submission: Tables 5-7, Figures 4-5
+├── docs/REPRODUCIBILITY.md          # environment, training, annotation, inference and analysis settings
 ├── requirements.txt
-├── LICENSE                        # MIT (code) + CC BY 4.0 (derived data under data/ and results/)
-└── CITATION.cff
+├── CITATION.cff
+└── LICENSE
 ```
 
-## Quick start (reproduce the tables and figures)
+## Reproducing the results
 
-The derived time series are committed (gzipped), so the analysis runs without a
-GPU or any video:
+The analysis scripts need neither a GPU nor the videos.
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install numpy scipy matplotlib          # or: pip install -r requirements.txt
+pip install -r requirements.txt            # analysis only: numpy, scipy, pandas, matplotlib, tabulate
 
-python3 src/analyze_replication.py       --data-dir data/timeseries --out-dir results
-python3 src/analyze_percentile_sweep.py  --data-dir data/timeseries --out-dir results
-python3 src/analyze_correlations.py      --data-dir data/timeseries --out-dir results
+# Revision: four optical-flow statistics (seconds; uses the committed series)
+python3 src/analyze_flow_statistics.py
+
+# Revision: paired centroid analysis (needs outputs.zip from Zenodo)
+unzip outputs.zip -d data/paired_tmp && mv data/paired_tmp/outputs/* data/paired/
+python3 src/analyze_paired_centroids.py --nboot 2000 --seed 20261104 --blocks 90,10
+python3 src/analyze_paired_centroids.py --nboot 2000 --seed 20261104 --blocks 300,600 \
+        --out-dir results/long_blocks     # block-length sensitivity
+
+# Submission: Tables 5-7 and Figures 4-5
+python3 src/analyze_replication.py      --data-dir data/timeseries --out-dir results
+python3 src/analyze_percentile_sweep.py --data-dir data/timeseries --out-dir results
+python3 src/analyze_correlations.py     --data-dir data/timeseries --out-dir results
 ```
 
-Each script rewrites its JSON in `results/`, its `.tex` fragment in
-`results/tables/`, and (the last two) a PNG in `results/figures/`. All three use
-a fixed `--seed 0` moving-block bootstrap for the confidence intervals, so runs
-are reproducible; `--nboot` trades runtime for CI precision (defaults: 2000 for
-correlations, 1000 for the sweep).
+The paired analysis takes roughly 10–15 min per recording on one CPU core with
+2000 replicates. Seeds are fixed, so reruns give identical output.
 
-> The `.tex` files contain Portuguese strings and `siunitx` comma decimals
-> because they are `\input` directly into the manuscript. The numbers are the
-> product; the surrounding prose is not meant to be read standalone here.
+### Recomputing the series from video
 
-## Recomputing the time series from video
-
-Only needed if you have the source `.mp4` and a trained checkpoint (neither is
-in this repository):
+This step needs the videos (Zenodo), a trained checkpoint, `opencv-python`,
+`ultralytics==8.4.51` and a CUDA build of `torch`:
 
 ```bash
-pip install -r requirements.txt   # adds opencv-python, ultralytics; install torch for your CUDA
+python3 src/compute_unrest_index.py --video video.mp4 --model seg.pt \
+    --output-dir out/ --stride 3 --conf 0.40 --imgsz 640 \
+    --centroid-source mask --hausdorff-percentiles 30,40,50,60,70,80,90,95
 
-python3 src/compute_unrest_index.py \
-    --video   path/to/video.mp4 \
-    --model   path/to/yolo26m-seg.pt \
-    --output-dir data/timeseries/<run> \
-    --stride 3 --conf 0.40 --imgsz 640 \
-    --centroid-source mask \
-    --hausdorff-percentiles 30,40,50,60,70,80,90,95
+python3 src/dump_paired_instances.py --video video.mp4 --model seg.pt \
+    --output-dir data/paired/<video>/ --stride 3 --conf 0.40 --imgsz 640
 ```
 
-`--centroid-source {bbox,mask}` picks the centroid; `mask` needs a `-seg`
-checkpoint. `--hausdorff-percentiles` computes every percentile column in a
-single inference pass (`unrest_p30 … unrest_p95` plus `unrest_classic`). Full
-parameter list and the values used in the paper are in
-[docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md).
+The parameter values used in the article are listed in
+[docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md). The model weights are not
+distributed. The annotated frames and their training/validation lists are on
+Zenodo (`annotations.zip`), so the models can be retrained.
 
-## Data not in git
+## Data
 
-* **Per-frame time series** — committed here as `data/timeseries/<run>/unrest_timeseries.csv.gz`
-  (column schema in [data/timeseries/README.md](data/timeseries/README.md)) and
-  also archived, with a snapshot of this repository, on Zenodo. The DOI is added
-  on article acceptance.
-* **Raw video** (`.dav`/`.mp4`) and **model weights** (`.pt`) — not distributed
-  in git (size, and the recordings are from a commercial facility). Archived on
-  Zenodo with the data.
+* **Per-step series** (`data/timeseries/`) are committed here, gzip-compressed.
+* **Videos, manual annotations, per-instance outputs and recording metadata**
+  are on Zenodo ([10.5281/zenodo.23960761](https://doi.org/10.5281/zenodo.23960761)):
+  * `video_*.mp4`: the eight recordings;
+  * `videos_metadata.csv`: verified date and time, batch, compartment,
+    treatment, bird age, resolution and frame rates;
+  * `annotations.zip`: YOLO datasets with the exact split lists;
+  * `outputs.zip`: per-instance tables, optical-flow grids and run
+    configurations.
 
-## License and citation
+The recordings were made at the Laboratory of Thermal Comfort II, School of
+Agricultural Engineering, University of Campinas (FEAGRI/UNICAMP), under
+protocol CEUA/UNICAMP 6519-1/2024. No intervention was made for this study.
 
-Code: MIT. Derived data under `data/` and `results/`: CC BY 4.0. See
+## How to cite
+
+Cite the article (reference above; full citation on publication) and, for the
+data, the Zenodo record. Citation metadata for this repository is in
+[CITATION.cff](CITATION.cff).
+
+## Funding
+
+São Paulo Research Foundation (FAPESP, grant 2024/21166-9) and the Brazilian
+National Council for Scientific and Technological Development (CNPq, grants
+443961/2024-7 and 308177/2021-5).
+
+## Licence
+
+Code: MIT. Derived data in `data/` and `results/`: CC BY 4.0. See
 [LICENSE](LICENSE).
-
-If you use this repository, cite the accompanying article (details in
-[CITATION.cff](CITATION.cff); full reference added on publication) and the
-Zenodo data record.
 
 ## References
 
-* Del Valle, J. E. et al. (2021). Unrest index for estimating thermal comfort of
-  poultry birds using computer vision techniques. *Biosystems Engineering*,
-  206, 123–134.
-* Pereira, D. F. et al. (2025). Equivalence between optical flow, the Unrest
-  Index, and walking distance to estimate the welfare of broiler chickens.
-  *Animals*, 15, 1311.
-* Huttenlocher, D. P. & Rucklidge, W. J. (1993); Dubuisson, M.-P. & Jain, A. K.
-  (1994); Taha, A. A. & Hanbury, A. (2015) — partial / percentile Hausdorff
-  distance.
+* Del Valle, J. E.; Pereira, D. F.; Mollo Neto, M.; Gabriel Filho, L. R. A.;
+  Salgado, D. D. (2021). Unrest index for estimating thermal comfort of poultry
+  birds (*Gallus gallus domesticus*) using computer vision techniques.
+  *Biosystems Engineering*, 206, 123–134.
+  https://doi.org/10.1016/j.biosystemseng.2021.03.018
+* Farnebäck, G. (2003). Two-frame motion estimation based on polynomial
+  expansion. In *Image Analysis (SCIA 2003)*, LNCS 2749, 363–370.
+  https://doi.org/10.1007/3-540-45103-X_50
+* Holm, S. (1979). A simple sequentially rejective multiple test procedure.
+  *Scandinavian Journal of Statistics*, 6, 65–70.
+* Huttenlocher, D. P.; Klanderman, G. A.; Rucklidge, W. J. (1993). Comparing
+  images using the Hausdorff distance. *IEEE Transactions on Pattern Analysis
+  and Machine Intelligence*, 15(9), 850–863.
+  https://doi.org/10.1109/34.232073
+* Künsch, H. R. (1989). The jackknife and the bootstrap for general stationary
+  observations. *The Annals of Statistics*, 17(3), 1217–1241.
+* Pereira, D. F.; Nääs, I. de A.; Mehdizadeh, S. A. (2025). Equivalence between
+  optical flow, the Unrest Index, and walking distance to estimate the welfare
+  of broiler chickens. *Animals*, 15, 1311. https://doi.org/10.3390/ani15091311
+* Zhang, Y.; Sun, P.; Jiang, Y.; Yu, D.; Weng, F.; Yuan, Z.; Luo, P.; Liu, W.;
+  Wang, X. (2022). ByteTrack: multi-object tracking by associating every
+  detection box. In *Computer Vision – ECCV 2022*, 1–21.
+  https://doi.org/10.1007/978-3-031-20047-2_1

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-compute_unrest_index.py -- Unrest Index + walking distance + optical flow
-for the Chicken_Unrest project (YOLO26m "ave" adult-chicken detector).
+compute_unrest_index.py -- Unrest Index + tracker-derived travel distance
+("walking distance" in column names) + optical flow from broiler video
+(YOLO26m single-class "ave" = bird models).
 
 Formulas implemented faithfully from:
   - Del Valle et al. 2021, "Unrest index for estimating thermal comfort of

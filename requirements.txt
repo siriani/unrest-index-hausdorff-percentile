@@ -1,9 +1,11 @@
 # Analysis scripts (src/analyze_*.py)
 numpy==1.26.4
 scipy==1.17.0
+pandas>=2.2
+tabulate>=0.9
 matplotlib>=3.8
 
-# Only needed to recompute the time series from video (src/compute_unrest_index.py)
+# Only needed to recompute from video (src/compute_unrest_index.py, src/dump_paired_instances.py)
 opencv-python==4.11.0
 ultralytics==8.4.51
 # torch: install the build matching your CUDA, e.g.

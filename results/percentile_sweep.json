@@ -7,7 +7,7 @@
   },
   "sources": {
     "bbox": {
-      "label": "Centroide de caixa",
+      "label": "Box centre",
       "fs_hz": 13.15290402055097,
       "block_steps": 132,
       "sweep": {
@@ -158,7 +158,7 @@
       }
     },
     "mask": {
-      "label": "Centroide de máscara (seg v3)",
+      "label": "Mask centroid (seg v3)",
       "fs_hz": 13.15290402055097,
       "block_steps": 132,
       "sweep": {

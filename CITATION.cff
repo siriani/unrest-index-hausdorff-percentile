@@ -1,27 +1,57 @@
 cff-version: 1.2.0
-message: "If you use this software or data, please cite the accompanying article."
-title: "Calibrating the Unrest Index for adult broiler video: the Hausdorff-distance percentile depends on the number of birds per frame"
+message: "If you use this software, please cite the accompanying article and, for the data, the Zenodo record."
+type: software
+title: "Unrest Index, tracker-derived travel distance and optical flow in broiler video: analysis code"
+version: "2.0-revision"
+date-released: "2026-11-05"
 abstract: >-
-  Code and derived time series for a step-wise, rank-based re-analysis of the
-  Unrest Index (Del Valle et al., 2021) on top-view adult-broiler video. Two
-  modifications are evaluated: an instance-segmentation mask area centroid and
-  the partial (percentile) Hausdorff distance. The central finding is the
-  coupling between the useful percentile k and the number of birds per frame n,
-  k*(n) ~= 100*(1 - 1/n): at n ~= 10 the medical-imaging HD95 is
-  indistinguishable from the max and aggressive percentiles cost ordering.
+  Code and derived per-step time series for the article "Comparison of the
+  Unrest Index with Tracker-Derived Travel Distance and Optical Flow in Broiler
+  Videos" (Animals, manuscript animals-4688242, under review). The Unrest Index
+  (Hausdorff distance between consecutive sets of bird positions) is compared
+  with tracker-derived travel distance and dense optical flow on eight overhead
+  recordings. The revision adds a controlled comparison of position read-outs
+  (raw box centre, tracker box centre and mask area centroid of identical
+  instances), a decomposition of model and read-out effects, a quantification of
+  shared-coordinate agreement, and paired moving-block bootstrap intervals.
 authors:
+  - family-names: Hübner
+    given-names: Igor Cristian
+    orcid: "https://orcid.org/0009-0002-9965-0283"
+    affiliation: "University of Campinas (UNICAMP), School of Agricultural Engineering (FEAGRI), Campinas, SP, Brazil"
   - family-names: Siriani
     given-names: Allan Lincoln Rodrigues
-    affiliation: "Sao Paulo State University (UNESP), Tupa, SP, Brazil"
+    affiliation: "São Paulo State University (UNESP), School of Sciences and Engineering, Tupã, SP, Brazil"
+  - family-names: Hokumura Filho
+    given-names: Carlos Nobuaki
+    affiliation: "São Paulo State University (UNESP), School of Sciences and Engineering, Tupã, SP, Brazil"
+  - family-names: Mollo Neto
+    given-names: Mário
+    affiliation: "São Paulo State University (UNESP), School of Sciences and Engineering, Tupã, SP, Brazil"
   - family-names: Moura
     given-names: Daniella Jorge de
-    affiliation: "University of Campinas (UNICAMP), FEAGRI, Campinas, SP, Brazil"
+    affiliation: "University of Campinas (UNICAMP), School of Agricultural Engineering (FEAGRI), Campinas, SP, Brazil"
+  - family-names: Barros
+    given-names: Juliana de Souza Granja
+    affiliation: "University of Campinas (UNICAMP), School of Agricultural Engineering (FEAGRI), Campinas, SP, Brazil"
+repository-code: "https://github.com/siriani/unrest-index-hausdorff-percentile"
+references:
+  - type: dataset
+    title: "Overhead videos, manual annotations and per-instance tracking outputs of small broiler groups for Unrest Index, travel-distance and optical-flow analyses"
+    doi: "10.5281/zenodo.23960761"
+    authors:
+      - family-names: Hübner
+        given-names: Igor Cristian
+      - family-names: Siriani
+        given-names: Allan Lincoln Rodrigues
+      - family-names: Moura
+        given-names: Daniella Jorge de
 keywords:
   - poultry welfare
   - precision livestock farming
   - computer vision
   - Hausdorff distance
   - Unrest Index
-  - YOLO
+  - multi-object tracking
   - optical flow
 license: MIT

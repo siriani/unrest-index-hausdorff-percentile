@@ -39,7 +39,7 @@ dropped from every correlation.
 
 ## Where the data lives
 
-The `.csv.gz` files are committed here **and** archived, together with a
-snapshot of this repository, on Zenodo with a DOI (added on article
-acceptance). Cite the Zenodo DOI for the data and this repository for the
-code.
+The `.csv.gz` files are committed here. The videos, annotations and
+per-instance outputs are on Zenodo
+([10.5281/zenodo.23960761](https://doi.org/10.5281/zenodo.23960761)). Cite the
+Zenodo record for the data and the article for the method.

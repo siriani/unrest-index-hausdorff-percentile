@@ -25,3 +25,8 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# Per-instance outputs (download outputs.zip from Zenodo)
+/data/paired/*
+!/data/paired/README.md
+/data/paired_tmp/

@@ -9,10 +9,10 @@
     "nboot": 2000,
     "seed": 0,
     "config_labels": {
-      "bbox_classic": "Caixa + clássico",
-      "bbox_p95": "Caixa + p95",
-      "mask_classic": "Máscara + clássico",
-      "mask_p50": "Máscara + p50"
+      "bbox_classic": "Box + classical",
+      "bbox_p95": "Box + p95",
+      "mask_classic": "Mask + classical",
+      "mask_p50": "Mask + p50"
     }
   },
   "step_wise": {
