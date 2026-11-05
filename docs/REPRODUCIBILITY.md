@@ -128,6 +128,22 @@ semantics of `compute_unrest_index.py`.
 
 Intervals describe uncertainty within a recording only.
 
+## Region-of-interest sensitivity *(revised)*
+
+`src/analyze_roi_sensitivity.py`, applied offline to the same per-instance outputs.
+
+* One fixed polygon per camera covers the pen floor and excludes the timestamp
+  overlay and everything outside the pen (`data/roi_polygons.json`, native
+  pixel coordinates, drawn on the median frame of each recording).
+* Centroid sets: an instance is kept when its mask area centroid lies inside the
+  polygon or within 15 px of its edge. The same instances are used for all three
+  read-outs, so the read-out comparison stays paired.
+* Optical flow: mean of the coarse flow-grid blocks (16 px on the half-resolution
+  frame, i.e. 32 native px) whose centre lies inside the polygon. The mean over
+  all blocks reproduces the full-frame flow (ρ = 1.000 in every recording).
+* Same paired moving-block bootstrap as above: 90 s blocks, 2000 replicates,
+  seed 20261105.
+
 ## Region of interest
 
 A fixed per-camera floor polygon (excluding the timestamp overlay and the

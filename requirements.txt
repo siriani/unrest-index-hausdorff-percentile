@@ -4,9 +4,9 @@ scipy==1.17.0
 pandas>=2.2
 tabulate>=0.9
 matplotlib>=3.8
+opencv-python==4.11.0        # also used by analyze_roi_sensitivity.py (point-in-polygon)
 
 # Only needed to recompute from video (src/compute_unrest_index.py, src/dump_paired_instances.py)
-opencv-python==4.11.0
 ultralytics==8.4.51
 # torch: install the build matching your CUDA, e.g.
 #   pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128

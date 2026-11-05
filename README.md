@@ -61,6 +61,13 @@ The numbers below are taken from `results/paired_centroids.md`.
   the maximum: Δρ +0.02 to +0.04, with the interval above zero in all eight
   recordings.
 
+* **Region of interest.** Restricting optical flow to a fixed pen-floor polygon
+  per camera (`data/roi_polygons.json`) raised index–flow agreement in all eight
+  recordings (mask centroid, classical index: Δρ +0.021 to +0.339), because
+  full-frame flow includes motion outside the pen. The polygon removed one
+  detection in one recording, and the centroid comparison was unchanged
+  (`results/roi_sensitivity.md`).
+
 Point estimates and conclusions are unchanged with bootstrap blocks of 10 s, 300 s
 and 600 s (`results/long_blocks/`). All intervals describe uncertainty *within*
 each recording. The eight
@@ -76,17 +83,20 @@ Zenodo) and are not a sample of independent flocks.
 │   ├── dump_paired_instances.py     # video -> per-instance table (raw box, tracker box, mask centroid) [revision]
 │   ├── analyze_paired_centroids.py  # controlled centroid / model / circularity contrasts [revision]
 │   ├── analyze_flow_statistics.py   # agreement with the four optical-flow moments [revision]
+│   ├── analyze_roi_sensitivity.py   # full frame vs fixed pen-floor region of interest [revision]
 │   ├── analyze_correlations.py      # principal recording, four configurations [submission]
 │   ├── analyze_percentile_sweep.py  # percentile sweep [submission]
 │   └── analyze_replication.py       # eight-recording replication [submission]
 ├── data/
 │   ├── MANIFEST.csv                 # the 16 per-step runs (video x model/read-out)
+│   ├── roi_polygons.json            # pen-floor polygon per recording, native pixels [revision]
 │   ├── timeseries/<run>/            # per-step series, committed (see data/timeseries/README.md)
 │   └── paired/README.md             # where to place the per-instance outputs from Zenodo
 ├── results/
 │   ├── paired_centroids.{json,md}   # revision: paired bootstrap, blocks of 90 s and 10 s
 │   ├── long_blocks/paired_centroids.{json,md}  # revision: blocks of 300 s and 600 s
 │   ├── flow_statistics.{csv,md}     # revision: four optical-flow statistics
+│   ├── roi_sensitivity.{json,md}    # revision: full frame vs region of interest
 │   ├── *.json, tables/, figures/    # submission: Tables 5-7, Figures 4-5
 ├── docs/REPRODUCIBILITY.md          # environment, training, annotation, inference and analysis settings
 ├── requirements.txt
@@ -100,7 +110,7 @@ The analysis scripts need neither a GPU nor the videos.
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt            # analysis only: numpy, scipy, pandas, matplotlib, tabulate
+pip install -r requirements.txt            # analysis: numpy, scipy, pandas, matplotlib, tabulate, opencv
 
 # Revision: four optical-flow statistics (seconds; uses the committed series)
 python3 src/analyze_flow_statistics.py
@@ -110,6 +120,8 @@ unzip outputs.zip -d data/paired_tmp && mv data/paired_tmp/outputs/* data/paired
 python3 src/analyze_paired_centroids.py --nboot 2000 --seed 20261104 --blocks 90,10
 python3 src/analyze_paired_centroids.py --nboot 2000 --seed 20261104 --blocks 300,600 \
         --out-dir results/long_blocks     # block-length sensitivity
+python3 src/analyze_roi_sensitivity.py --roi-json data/roi_polygons.json \
+        --nboot 2000 --seed 20261105     # region-of-interest sensitivity
 
 # Submission: Tables 5-7 and Figures 4-5
 python3 src/analyze_replication.py      --data-dir data/timeseries --out-dir results
