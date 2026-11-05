@@ -20,6 +20,13 @@ same code as analyze_paired_centroids.py. Agreement with and without the ROI
 is compared with the same paired moving-block bootstrap (one set of block
 indices per replicate for every series).
 
+The model effect (segmenter minus detector, both read at the tracker box centre)
+is also re-evaluated against the pen-floor flow. The detector series comes from
+the earlier det_v5 run (<det-dir>/<video>_sweep_bbox/unrest_timeseries.csv[.gz]),
+frame-aligned with the paired run; no per-instance detector output exists, so the
+detector index is not restricted to the polygon (the polygon removed at most one
+segmenter instance per recording).
+
 Inputs : <paired-dir>/<video>/{instances.csv.gz, steps.csv, flow_grid.npz}
          --roi-json  {video: [[x, y], ...]} in native pixels
 Output : <out-dir>/roi_sensitivity.{json,md}
@@ -59,7 +66,8 @@ def flow_in_roi(grid_npz: Path, poly: np.ndarray) -> tuple[np.ndarray, np.ndarra
     return full, roi, int(inside.sum()), int(inside.size)
 
 
-def analyse(vid: str, poly: np.ndarray, tol: float, nboot: int, block_sec: float, seed: int, paired_dir: Path):
+def analyse(vid: str, poly: np.ndarray, tol: float, nboot: int, block_sec: float, seed: int, paired_dir: Path,
+            det_dir: Path):
     d = paired_dir / vid
     steps = pd.read_csv(d / "steps.csv")
     inst = pd.read_csv(d / "instances.csv.gz")
@@ -82,6 +90,15 @@ def analyse(vid: str, poly: np.ndarray, tol: float, nboot: int, block_sec: float
             V[f"UIroi_{src}_{kn}"] = S_roi[f"UI_{src}_{kn}"]
         V[f"WD_{src}"] = S_full[f"WD_{src}"]
         V[f"WDroi_{src}"] = S_roi[f"WD_{src}"]
+    det_csv = det_dir / f"{vid}_sweep_bbox" / "unrest_timeseries.csv"
+    if not det_csv.exists():
+        det_csv = det_csv.with_suffix(".csv.gz")
+    det = pd.read_csv(det_csv).set_index("step_idx").reindex(range(n_steps))
+    if not (np.array_equal(det["native_frame_idx"].to_numpy(float), steps.native_frame_idx.to_numpy(float))
+            and np.nanmax(np.abs(det["optical_flow_mean"].to_numpy(float) - flow_ref)) <= 1e-6):
+        raise SystemExit(f"{vid}: det_v5 run not frame-aligned with the paired run")
+    for kn in KNS:
+        V[f"UI_det_{kn}"] = det[f"unrest_{kn}"].to_numpy(float)
     valid = np.ones(n_steps, bool)
     for v in V.values():
         valid &= np.isfinite(v)
@@ -104,6 +121,10 @@ def analyse(vid: str, poly: np.ndarray, tol: float, nboot: int, block_sec: float
         pairs[f"WDroi_{src}|flow_roi"] = (f"WDroi_{src}", "flow_roi")
         diffs[f"roi-full|WD_{src}|flow"] = (f"WDroi_{src}|flow_roi", f"WD_{src}|flow")
     for kn in KNS:
+        pairs[f"UI_det_{kn}|flow"] = (f"UI_det_{kn}", "flow")
+        pairs[f"UI_det_{kn}|flow_roi"] = (f"UI_det_{kn}", "flow_roi")
+        diffs[f"model_full(seg_kf-det_kf)|{kn}|flow"] = (f"UI_kf_{kn}|flow", f"UI_det_{kn}|flow")
+        diffs[f"model_roi(seg_kf-det_kf)|{kn}|flow"] = (f"UIroi_kf_{kn}|flow_roi", f"UI_det_{kn}|flow_roi")
         diffs[f"centroid_roi(mask-raw)|{kn}|flow"] = (f"UIroi_mask_{kn}|flow_roi", f"UIroi_raw_{kn}|flow_roi")
         diffs[f"centroid_full(mask-raw)|{kn}|flow"] = (f"UI_mask_{kn}|flow", f"UI_raw_{kn}|flow")
 
@@ -172,6 +193,12 @@ def emit_md(R: dict, out: Path):
         dd = r["diff"]
         o.append(f"| {lab[v]} | " + " | ".join(apc.cell_d(dd, f"centroid_{w}(mask-raw)|{kn}|flow").replace("*", "")
                                               for kn in KNS for w in ("full", "roi")) + " |")
+    o += ["", "## 3b. Model effect (segmenter - detector, tracker box centre) vs optical flow, full frame and within the ROI", "",
+          "| Video | classic full | classic ROI | p95 full | p95 ROI |", "|---|---|---|---|---|"]
+    for v, r in R["videos"].items():
+        dd = r["diff"]
+        o.append(f"| {lab[v]} | " + " | ".join(apc.cell_d(dd, f"model_{w}(seg_kf-det_kf)|{kn}|flow").replace("*", "")
+                                              for kn in KNS for w in ("full", "roi")) + " |")
     o += ["", "## 4. Across recordings", "", "| Contrast | mean | min | max | CI>0 | CI<0 |", "|---|---|---|---|---|---|"]
     keys = sorted(next(iter(R["videos"].values()))["diff"].keys())
     for k in keys:
@@ -186,6 +213,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--paired-dir", type=Path, default=apc.PAIRED)
     ap.add_argument("--roi-json", type=Path, required=True)
+    ap.add_argument("--det-dir", type=Path, default=apc.RES)
     ap.add_argument("--tolerance-px", type=float, default=15.0)
     ap.add_argument("--nboot", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=20261105)
@@ -200,7 +228,7 @@ def main():
     for v in vids:
         print(f"analysing {v}", flush=True)
         R["videos"][v] = analyse(v, np.array(polys[v], np.float32).reshape(-1, 1, 2), a.tolerance_px,
-                                 a.nboot, a.block_sec, a.seed, a.paired_dir)
+                                 a.nboot, a.block_sec, a.seed, a.paired_dir, a.det_dir)
     a.out_dir.mkdir(parents=True, exist_ok=True)
     (a.out_dir / "roi_sensitivity.json").write_text(json.dumps(R, indent=2), "utf-8")
     emit_md(R, a.out_dir / "roi_sensitivity.md")

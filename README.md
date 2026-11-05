@@ -11,7 +11,7 @@ Analysis code and derived time series for the article
 |---|---|
 | Code | this repository (MIT licence) |
 | Data (videos, annotations, per-instance outputs) | Zenodo, DOI [10.5281/zenodo.23960761](https://doi.org/10.5281/zenodo.23960761) (CC BY 4.0; the DOI resolves once the record is published) |
-| Release for the revised manuscript | tag `v2.0-revision` |
+| Release for the revised manuscript | tag `v2.1-revision` (`v2.0-revision`: before the model effect against pen-floor flow) |
 | Release for the submitted manuscript | tag `v1.0-submission` (commit `d36de64`) |
 
 ## Overview
@@ -65,8 +65,9 @@ The numbers below are taken from `results/paired_centroids.md`.
   per camera (`data/roi_polygons.json`) raised index–flow agreement in all eight
   recordings (mask centroid, classical index: Δρ +0.021 to +0.339), because
   full-frame flow includes motion outside the pen. The polygon removed one
-  detection in one recording, and the centroid comparison was unchanged
-  (`results/roi_sensitivity.md`).
+  detection in one recording, and the centroid comparison was unchanged.
+  Against pen-floor flow the model effect remained positive in all eight
+  recordings (Δρ +0.039 to +0.132) (`results/roi_sensitivity.md`).
 
 Point estimates and conclusions are unchanged with bootstrap blocks of 10 s, 300 s
 and 600 s (`results/long_blocks/`). All intervals describe uncertainty *within*
