@@ -11,7 +11,7 @@ Analysis code and derived time series for the article
 |---|---|
 | Code | this repository (MIT licence) |
 | Data (videos, annotations, per-instance outputs) | Zenodo, DOI [10.5281/zenodo.23960761](https://doi.org/10.5281/zenodo.23960761) (CC BY 4.0; the DOI resolves once the record is published) |
-| Release for the revised manuscript | tag `v2.1-revision` (`v2.0-revision`: before the model effect against pen-floor flow) |
+| Release for the revised manuscript | tag `v2.2-revision` (minor revision; earlier tags `v2.0-revision` and `v2.1-revision` are kept) |
 | Release for the submitted manuscript | tag `v1.0-submission` (commit `d36de64`) |
 
 ## Overview
@@ -132,6 +132,28 @@ python3 src/analyze_correlations.py     --data-dir data/timeseries --out-dir res
 
 The paired analysis takes roughly 10–15 min per recording on one CPU core with
 2000 replicates. Seeds are fixed, so reruns give identical output.
+
+### Where each reported number comes from
+
+All outputs below are committed in this release. Run the commands from the
+repository root after placing the Zenodo per-instance outputs in `data/paired/`
+(only needed for Table 8, S2 and S4).
+
+| Manuscript table | Script | Command (configuration) | Output file |
+|---|---|---|---|
+| Table 5 (90-s blocks, primary) | `src/analyze_correlations.py` | `--block-sec 90 --nboot 2000 --seed 0 --out-dir results/blocks90` | `results/blocks90/correlations.json` |
+| Table 6 | `src/analyze_percentile_sweep.py` | `--data-dir data/timeseries --out-dir results` | `results/percentile_sweep.json` |
+| Table 7 | `src/analyze_replication.py` | `--data-dir data/timeseries --out-dir results` | `results/replication.json` |
+| Table 8 | `src/analyze_paired_centroids.py` | `--nboot 2000 --seed 20261104 --blocks 90,10` | `results/paired_centroids.json`, `.md` |
+| Table S1 | `src/analyze_flow_statistics.py` | defaults | `results/flow_statistics.csv`, `.md` |
+| Table S2 | `src/analyze_roi_sensitivity.py` | `--roi-json data/roi_polygons.json --tolerance-px 15 --nboot 2000 --seed 20261105 --block-sec 90` | `results/roi_sensitivity.json`, `.md` |
+| Table S3 (10-s blocks) | `src/analyze_correlations.py` | `--block-sec 10 --nboot 2000 --seed 0` | `results/correlations.json` |
+| Table S4 (10, 90 s) | `src/analyze_paired_centroids.py` | `--nboot 2000 --seed 20261104 --blocks 90,10` | `results/paired_centroids.json` |
+| Table S4 (300, 600 s) | `src/analyze_paired_centroids.py` | `--nboot 2000 --seed 20261104 --blocks 300,600 --out-dir results/long_blocks` | `results/long_blocks/paired_centroids.json` |
+
+Model, tracker and optical-flow settings are in Table 3 of the article and in
+`run_config.json` of every run (`data/timeseries/<run>/`, and in the Zenodo
+`outputs.zip` for the single-model pass).
 
 ### Recomputing the series from video
 

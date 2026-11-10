@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, please cite the accompanying article and, for the data, the Zenodo record."
 type: software
 title: "Unrest Index, tracker-derived travel distance and optical flow in broiler video: analysis code"
-version: "2.1-revision"
+version: "2.2-revision"
 date-released: "2026-11-05"
 abstract: >-
   Code and derived per-step time series for the article "Comparison of the
